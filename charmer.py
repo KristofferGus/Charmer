@@ -74,13 +74,16 @@ def get_tabel_df(html_tabel_path):
     return table_df
 
 def find_company(table_df, programs, program_level, offering_types):
-    good_companies = []
+    good_companies = {}
     for i in range(table_df.shape[0]):
         company = table_df.iloc[i]
         a = bool(set((company["Programs"])) & set(programs))
         a = a and bool(set(list(company["Looking for"])) & set(program_level))
         a = a and bool(set(list(company["Offering"])) & set(offering_types))
         if a:
-            good_companies.append(company["Name"])
+            area = company["Fair Area"]
+            l = good_companies.get(area, [])
+            l.append((company["Name"]))
+            good_companies[area] = l
     return good_companies
 
